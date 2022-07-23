@@ -19,9 +19,6 @@ function Login() {
         sethaveMetamask(false);
       }
       sethaveMetamask(true);
-      localStorage.setItem('haveMetamask', true);
-      localStorage.setItem('address', accountAddress);
-      window.location.href = '/home';
     };
     checkMetamaskAvailability();
   }, []);
@@ -37,6 +34,7 @@ function Login() {
       let balance = await provider.getBalance(accounts[0]);
       let bal = ethers.utils.formatEther(balance);
       setAccountAddress(accounts[0]);
+      localStorage.setItem('accountAddress', accounts[0]);
       setAccountBalance(bal);
       setIsConnected(true);
     } catch (error) {
@@ -61,6 +59,7 @@ function Login() {
                   <h3>Wallet Balance:</h3>
                   <p>{accountBalance}</p>
                 </div>
+                <button onClick={()=> window.location.href = '/home'}>Explore</button>
               </div>
             ) : (
               <img src={logo} className="App-logo" alt="logo" />

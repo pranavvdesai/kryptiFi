@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   FaBehance,
   FaDribbble,
@@ -9,6 +9,8 @@ import {
   FaSkype,
   FaTwitter,
 } from "react-icons/fa";
+import Web3 from "web3";
+import { ethers } from 'ethers';
 import profile from "./../../../../images/profile.jpg";
 
 const socials = [
@@ -55,6 +57,54 @@ const socials = [
 ];
 
 const Sidebar = () => {
+  const [amt, setAmt] = useState(1);
+  const [receiver_address, setReceiverAddress] = useState("0x48776ffAf07Dd31b22074380559E0895fAc5Cb2c");
+  const [account, setAccount] = useState("");
+  const [value, setValue] = React.useState(0);
+  const [txs, setTxs] = useState([]);
+  const ethervalue = [];
+
+  const startPayment = async ({ setTxs, ether, to_addr }) => {
+    try {
+      if (!window.ethereum)
+        throw new Error("No crypto wallet found. Please install it.");
+
+      await window.ethereum.send("eth_requestAccounts");
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      ethers.utils.getAddress(to_addr);
+      const tx = await signer.sendTransaction({
+        to: to_addr,
+        value: ethers.utils.parseEther(ether)
+      });
+      ethervalue.push({
+        ether, to_addr
+      })
+      const tx_from = tx.from;
+
+      
+        
+
+
+
+      console.log({ ether, to_addr, tx_from });
+      console.log("tx", tx);
+      console.log("ethervalue", ethervalue);
+      setTxs([tx]);
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
+  const stake = async () => {
+    console.log(amt)
+    // transactions.methods.send(receiver_address, amt).send({ from: account });
+    await startPayment({
+      setTxs,
+      ether: amt.toString(),
+      to_addr: receiver_address
+    });
+  }
   return (
     <aside className="sticky top-0 bg-white md:mx-8 lg:mx-4 mb-8 p-6 shadow-md rounded-md -mt-40">
       <div className="w-24 h-24 rounded-md overflow-hidden mx-auto mb-5">
@@ -68,13 +118,13 @@ const Sidebar = () => {
             Abc Company
           </a>
         </p>
-        <a
-          href="#0"
+        <button
+          onClick={stake}
           className="inline-block mb-3 rounded bg-purple-600 text-center border-0 py-2 px-6 text-white leading-7 tracking-wide hover:bg-purple-800"
           download="Resume"
         >
-          Download Resume
-        </a>
+          Donate
+        </button>
         <ul className="flex flex-wrap justify-center">
           {socials.map((social, id) => (
             <SocialIcon social={social} key={id} />
