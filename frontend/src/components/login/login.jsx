@@ -21,7 +21,7 @@ function Login() {
       sethaveMetamask(true);
       localStorage.setItem('haveMetamask', true);
       localStorage.setItem('address', accountAddress);
-      window.location.href = '/home';
+      // window.location.href = '/home';
     };
     checkMetamaskAvailability();
   }, []);
